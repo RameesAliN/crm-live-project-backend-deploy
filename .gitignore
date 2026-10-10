@@ -1,0 +1,26 @@
+@"
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+venv1/
+.venv/
+
+# Environment variables
+.env
+
+# Django database and generated files
+db.sqlite3
+media/
+staticfiles/
+
+# IDE
+.vscode/
+
+# Test and coverage
+.coverage
+htmlcov/
+.pytest_cache/
+"@ | Set-Content .gitignore
