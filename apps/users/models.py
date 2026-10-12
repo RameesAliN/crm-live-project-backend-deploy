@@ -43,11 +43,9 @@ class User(AbstractUser):
         ("employee", "Employee"),
     ]
 
-    role = models.CharField(
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default="employee"
-    )
+    role = models.CharField(max_length=20,choices=ROLE_CHOICES,default="employee")
+    requested_role = models.CharField(max_length=20,choices=ROLE_CHOICES,default="employee")
+    role_approved = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

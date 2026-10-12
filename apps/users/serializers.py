@@ -27,6 +27,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "phone",
             "company_name",
             "industry_type",
+            "requested_role",
             "country",
             "password",
             "confirm_password",
@@ -35,19 +36,20 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs["confirm_password"]:
-            raise serializers.ValidationError({
-                "confirm_password": "Passwords do not match."
-            })
+            raise serializers.ValidationError({"confirm_password": "Passwords do not match." })
 
         return attrs
 
     def create(self, validated_data):
         validated_data.pop("confirm_password")
         password = validated_data.pop("password")
+        requested_role = validated_data.pop("requested_role", "employee")
 
         user = User.objects.create_user(
             password=password,
             role="employee",
+            requested_role=requested_role,
+            role_approved=(requested_role == "employee"),
             **validated_data
         )
 
