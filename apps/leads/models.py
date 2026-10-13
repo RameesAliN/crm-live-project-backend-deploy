@@ -7,7 +7,7 @@ class Lead(models.Model):
 
     STATUS_CHOICES = [
         ("New", "New"),
-        ("Open", "Open"),
+        ("Contacted", "Contacted"),
         ("In Progress", "In Progress"),
         ("Qualified", "Qualified"),
         ("Converted", "Converted"),
