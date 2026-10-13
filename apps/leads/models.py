@@ -1,4 +1,5 @@
 
+from django.conf import settings
 from django.db import models
 
 
@@ -8,7 +9,7 @@ class Lead(models.Model):
         ("New", "New"),
         ("Open", "Open"),
         ("In Progress", "In Progress"),
-        ("Unqualified", "Unqualified"),
+        ("Qualified", "Qualified"),
         ("Converted", "Converted"),
     ]
 
@@ -20,9 +21,16 @@ class Lead(models.Model):
     country_code = models.CharField(max_length=10, blank=True)
     phone = models.CharField(max_length=20, blank=True)
     job_title = models.CharField(max_length=150, blank=True)
-
+    country=models.CharField(max_length=150,blank=True)
     
-    contact_owner = models.CharField(max_length=150, blank=True)
+    contact_owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="owned_leads",
+    )
+
     products = models.CharField(max_length=255, blank=True)
     company = models.CharField(max_length=150, blank=True)
 
