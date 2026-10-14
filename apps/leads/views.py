@@ -8,12 +8,12 @@ from .models import Lead
 from .serializers import LeadSerializer
 
 class LeadListCreateView(generics.ListCreateAPIView):
-    queryset = Lead.objects.all().select_related("contact_owner")
+    queryset = Lead.objects.all().prefetch_related("contact_owner")
     serializer_class = LeadSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class LeadDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Lead.objects.all().select_related("contact_owner")
+    queryset = Lead.objects.all().prefetch_related("contact_owner")
     serializer_class = LeadSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
