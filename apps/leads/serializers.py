@@ -1,22 +1,8 @@
 from rest_framework import serializers
 from .models import Lead
 
-
-from rest_framework import serializers
-from .models import Lead
-
-
 class LeadSerializer(serializers.ModelSerializer):
-    contact_owner_name = serializers.CharField(
-        source="contact_owner.username",
-        read_only=True,
-    )
-
-    product_names = serializers.StringRelatedField(
-        source="products",
-        many=True,
-        read_only=True,
-    )
+    contact_owner_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Lead
@@ -34,9 +20,14 @@ class LeadSerializer(serializers.ModelSerializer):
             "contact_owner",
             "contact_owner_name",
             "products",
-            "product_names",
             "company",
             "created_date",
             "updated_date",
         ]
+
         read_only_fields = ["id", "created_date", "updated_date"]
+
+    def get_contact_owner_name(self, obj):
+        if obj.contact_owner:
+            return obj.contact_owner.get_full_name()
+        return None
