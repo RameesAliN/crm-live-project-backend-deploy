@@ -1,8 +1,30 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from .models import Lead
+# from .models import Lead
+
+User = get_user_model()
+
+class UserLeadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lead
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "lead_status",
+            "company",
+            "created_date",
+        ]
+
+
 
 class LeadSerializer(serializers.ModelSerializer):
     contact_owner_name = serializers.SerializerMethodField()
+    contact_owner = serializers.PrimaryKeyRelatedField( 
+        queryset=User.objects.all(), many=True, required=False, )
 
     class Meta:
         model = Lead
@@ -27,7 +49,13 @@ class LeadSerializer(serializers.ModelSerializer):
 
         read_only_fields = ["id", "created_date", "updated_date"]
 
-    def get_contact_owner_name(self, obj):
-        if obj.contact_owner:
-            return obj.contact_owner.get_full_name()
-        return None
+    def get_contact_owner_name(self, obj) -> list[str]:
+          names = []
+
+          for owner in obj.contact_owner.all():
+            full_name = owner.get_full_name()
+            names.append(full_name )
+
+          return names
+
+
