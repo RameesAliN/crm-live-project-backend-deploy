@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
+from apps.leads.serializers import UserLeadSerializer
 User = get_user_model()
 
 
@@ -33,24 +34,35 @@ class RegisterSerializer(serializers.ModelSerializer):
             "confirm_password",
         ]
         read_only_fields = ["id"]
+        def validate(self, attrs):
+                if attrs["password"] != attrs["confirm_password"]:
+                    raise serializers.ValidationError({"confirm_password": "Passwords do not match." })
+        
+                return attrs
+        
+        def create(self, validated_data):
+                validated_data.pop("confirm_password")
+                password = validated_data.pop("password")
+                requested_role = validated_data.pop("requested_role", "employee")
+        
+                user = User.objects.create_user(
+                    password=password,
+                    role="employee",
+                    requested_role=requested_role,
+                    role_approved=(requested_role == "employee"),
+                    **validated_data
+                )
+        
+                return user
 
-    def validate(self, attrs):
-        if attrs["password"] != attrs["confirm_password"]:
-            raise serializers.ValidationError({"confirm_password": "Passwords do not match." })
 
-        return attrs
+#user serlzr
+        
+class UserSerializer(serializers.ModelSerializer): 
+    leads = UserLeadSerializer( source="owned_leads", many=True, read_only=True, ) 
+    class Meta: 
+        model = User 
+        fields = [ "id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "requested_role", "country", "leads", ] 
+        read_only_fields = ["id", "leads"]
 
-    def create(self, validated_data):
-        validated_data.pop("confirm_password")
-        password = validated_data.pop("password")
-        requested_role = validated_data.pop("requested_role", "employee")
-
-        user = User.objects.create_user(
-            password=password,
-            role="employee",
-            requested_role=requested_role,
-            role_approved=(requested_role == "employee"),
-            **validated_data
-        )
-
-        return user
+   
