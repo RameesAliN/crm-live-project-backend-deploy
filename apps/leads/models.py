@@ -23,13 +23,11 @@ class Lead(models.Model):
     job_title = models.CharField(max_length=150, blank=True)
     country=models.CharField(max_length=150,blank=True)
     
-    contact_owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="owned_leads",
-    )
+    contact_owner = models.ManyToManyField(
+    settings.AUTH_USER_MODEL,
+    blank=True,
+    related_name="owned_leads",
+)
 
     products = models.CharField(max_length=255, blank=True)
     company = models.CharField(max_length=150, blank=True)
