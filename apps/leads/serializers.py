@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+
+from apps.products.models import Product
 from .models import Lead
 # from .models import Lead
 
@@ -18,13 +20,19 @@ class UserLeadSerializer(serializers.ModelSerializer):
             "company",
             "created_date",
         ]
-
+class ProductSerializer(serializers.ModelSerializer): 
+    class Meta:
+         model = Product 
+         fields = ["id", "name","price"]
 
 
 class LeadSerializer(serializers.ModelSerializer):
     contact_owner_name = serializers.SerializerMethodField()
     contact_owner = serializers.PrimaryKeyRelatedField( 
         queryset=User.objects.all(), many=True, required=False, )
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(),source="products", many=True, required=False,write_only=True, )
+    products = ProductSerializer(  many=True, read_only=True, )
 
     class Meta:
         model = Lead
@@ -42,6 +50,7 @@ class LeadSerializer(serializers.ModelSerializer):
             "contact_owner",
             "contact_owner_name",
             "products",
+            "product_id",
             "company",
             "created_date",
             "updated_date",
