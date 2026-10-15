@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'drf_spectacular',
     'apps.users.apps.UsersConfig',
-    'apps.leads.apps.LeadsConfig'
+    'apps.leads.apps.LeadsConfig',
+    'apps.products.apps.ProductsConfig',
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

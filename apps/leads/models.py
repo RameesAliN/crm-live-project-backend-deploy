@@ -1,6 +1,7 @@
 
 from django.conf import settings
 from django.db import models
+from apps.products.models import Product
 
 
 class Lead(models.Model):
@@ -27,9 +28,13 @@ class Lead(models.Model):
     settings.AUTH_USER_MODEL,
     blank=True,
     related_name="owned_leads",
-)
+     )
 
-    products = models.CharField(max_length=255, blank=True)
+    products =  models.ManyToManyField(
+    Product,
+    blank=True,
+    related_name="leads",
+     )
     company = models.CharField(max_length=150, blank=True)
 
     
