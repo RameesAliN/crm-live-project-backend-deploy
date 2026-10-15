@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from drf_spectacular.views import (
+from drf_spectacular.views import ( # type: ignore
     SpectacularAPIView,
     SpectacularSwaggerView,
     SpectacularRedocView,
@@ -11,6 +11,7 @@ urlpatterns = [
 
     # User APIs
    path("api/v1/", include("config.api_urls")),
+   
 
     # Swagger Documentation
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
