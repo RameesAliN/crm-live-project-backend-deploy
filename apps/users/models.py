@@ -54,4 +54,5 @@ class User(AbstractUser):
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        full_name = f"{self.first_name} {self.last_name}".strip()
+        return full_name or self.email

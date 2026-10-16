@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-
+from apps.deals.serializers import DealSummarySerializer
 from apps.leads.serializers import UserLeadSerializer
 from apps.companies.serializers import CompanySerializer
 
@@ -62,10 +62,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         
 class UserSerializer(serializers.ModelSerializer): 
     leads = UserLeadSerializer( source="owned_leads", many=True, read_only=True, ) 
-    companies = CompanySerializer( source="owned_companies",many=True, read_only=True, ) 
+    deals = DealSummarySerializer(many=True, read_only=True)
     class Meta: 
         model = User 
-        fields = [ "id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "requested_role", "country", "leads","companies" ] 
-        read_only_fields = ["id", "leads","companies"]
+        fields = [ "id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "requested_role", "country", "leads", "deals", ] 
+        read_only_fields = ["id", "leads", "deals"]
 
    
