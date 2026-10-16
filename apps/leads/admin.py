@@ -12,11 +12,14 @@ class LeadAdmin(admin.ModelAdmin):
         "contact_owner_name",
     )
 
-    @admin.display(description="Contact Owner")
+    
+    @admin.display(description="Contact Owners")
     def contact_owner_name(self, obj):
-        if obj.contact_owner:
-            return (
-                obj.contact_owner.first_name
-                or obj.contact_owner.email
-            )
-        return "Unassigned"
+     owners = obj.contact_owner.all()
+     if owners.exists():
+                    return ", ".join(
+                        owner.first_name or owner.email
+                        for owner in owners
+                    )
+
+     return "Unassigned"
