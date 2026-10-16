@@ -22,7 +22,8 @@ class Deal(models.Model):
     associated_lead = models.ForeignKey(
         "leads.Lead",
         null=True,
-        on_delete=models.SET_NULL,
+        blank=True,
+        on_delete=models.PROTECT,
         related_name="deals",
     )
     
