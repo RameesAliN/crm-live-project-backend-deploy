@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv # type: ignore
 
 # BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "apps.companies.apps.CompaniesConfig",
     'apps.products.apps.ProductsConfig',
     'apps.tickets.apps.TicketsConfig',
+    'apps.deals',
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
