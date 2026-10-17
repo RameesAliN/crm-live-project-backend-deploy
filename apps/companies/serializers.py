@@ -9,9 +9,9 @@ User = get_user_model()
 
 class CompanySerializer(serializers.ModelSerializer):
     company_owner = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-        required=False,
-        allow_null=True,)
+    queryset=User.objects.all(),
+    many=True,
+    required=False,)
 
     company_owner_name = serializers.SerializerMethodField()
 
@@ -42,8 +42,7 @@ class CompanySerializer(serializers.ModelSerializer):
         ]
 
     def get_company_owner_name(self, obj):
-      if obj.company_owner:
-        return f"{obj.company_owner.first_name} {obj.company_owner.last_name}".strip()
-
-
-      return None
+        return [
+            f"{owner.first_name} {owner.last_name}".strip()
+            for owner in obj.company_owner.all()
+        ]

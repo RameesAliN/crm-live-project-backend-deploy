@@ -29,8 +29,8 @@ INSTALLED_APPS = [
     'apps.users.apps.UsersConfig',
     'apps.leads.apps.LeadsConfig',
     'apps.deals',
-    'apps.products.apps.ProductsConfig',
     "apps.companies.apps.CompaniesConfig",
+    'apps.products.apps.ProductsConfig',
     'apps.tickets.apps.TicketsConfig',
 
 

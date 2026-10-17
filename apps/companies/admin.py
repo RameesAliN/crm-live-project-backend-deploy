@@ -4,25 +4,28 @@ from .models import Company
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
+
     list_display = (
-        "id",
         "company_name",
-        "company_owner",
+        "id",
+        "display_company_owners",
         "industry",
+        "type",
         "city",
-        "country_region",
         "created_date",
     )
 
     search_fields = (
         "company_name",
         "domain",
-        "city",
+        "company_owner__first_name",
+        "company_owner__last_name",
     )
 
-    list_filter = (
-        "industry",
-        "country_region",
-    )
+    def display_company_owners(self, obj):
+        return ", ".join(
+            f"{user.first_name} {user.last_name}".strip()
+            for user in obj.company_owner.all()
+        )
 
-    ordering = ("-created_date",)
+    display_company_owners.short_description = "Company Owners"
