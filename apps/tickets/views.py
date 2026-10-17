@@ -11,10 +11,9 @@ from .serializers import TicketSerializer
 class TicketListCreateView(generics.ListCreateAPIView):
     queryset = Ticket.objects.all().order_by("-id")
     serializer_class = TicketSerializer
-    permission_classes = [IsAuthenticated]
+
 
 
 class TicketDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
-    permission_classes = [IsAuthenticated]
