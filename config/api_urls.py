@@ -8,6 +8,6 @@ urlpatterns = [
     path("companies/", include("apps.companies.urls")),
     path("products/",include("apps.products.urls")),
     path("notes/", include("apps.activities.urls")),
-    path("", include("apps.emailactivity.urls"))
-    path ("tickets/",include("apps.tickets.urls"))
+    path ("tickets/",include("apps.tickets.urls")),
+    path("emails/", include("apps.emailactivity.urls")),
 ]
