@@ -10,10 +10,10 @@ from .serializers import LeadSerializer
 class LeadListCreateView(generics.ListCreateAPIView):
     queryset = Lead.objects.all().prefetch_related("contact_owner")
     serializer_class = LeadSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
 class LeadDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lead.objects.all().prefetch_related("contact_owner")
     serializer_class = LeadSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
