@@ -12,7 +12,8 @@ class LeadAdmin(admin.ModelAdmin):
         "contact_owner_name",
     )
 
-    @admin.display(description="Contact Owner")
+    
+    @admin.display(description="Contact Owners")
     def contact_owner_name(self, obj):
         owners = obj.contact_owner.all()
         if owners.exists():

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
 from apps.products.models import Product
+from apps.companies.models import Company
 from .models import Lead
 # from .models import Lead
 
@@ -26,13 +27,17 @@ class ProductSerializer(serializers.ModelSerializer):
          fields = ["id", "name","price"]
 
 
+
 class LeadSerializer(serializers.ModelSerializer):
     contact_owner_name = serializers.SerializerMethodField()
     contact_owner = serializers.PrimaryKeyRelatedField( 
-        queryset=User.objects.all(), many=True, required=False, )
+    queryset=User.objects.all(), many=True, required=False, )
     product_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(),source="products", many=True, required=False,write_only=True, )
+    queryset=Product.objects.all(),source="products", many=True, required=False,write_only=True, )
     products = ProductSerializer(  many=True, read_only=True, )
+    company = serializers.SlugRelatedField( 
+        slug_field="company_name", 
+        queryset=Company.objects.all(), required=False, allow_null=True, )
 
     class Meta:
         model = Lead
