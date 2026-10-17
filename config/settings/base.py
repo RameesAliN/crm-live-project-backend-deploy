@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'apps.users.apps.UsersConfig',
     'apps.leads.apps.LeadsConfig',
+    'apps.deals',
     "apps.companies.apps.CompaniesConfig",
     'apps.products.apps.ProductsConfig',
 ]

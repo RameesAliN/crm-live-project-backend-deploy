@@ -10,7 +10,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
 
     # User APIs
-   path("api/v1/", include("config.api_urls")),
+    path("api/v1/", include("config.api_urls")),
    
 
     # Swagger Documentation
