@@ -2,6 +2,7 @@
 from django.conf import settings
 from django.db import models
 from apps.products.models import Product
+from apps.companies.models import Company
 
 
 class Lead(models.Model):
@@ -35,7 +36,13 @@ class Lead(models.Model):
     blank=True,
     related_name="leads",
      )
-    company = models.CharField(max_length=150, blank=True)
+    company = models.ForeignKey(
+         Company,
+         on_delete=models.SET_NULL, 
+         null=True,
+         blank=True,
+         related_name="leads", 
+    )
 
     
     lead_status = models.CharField(
