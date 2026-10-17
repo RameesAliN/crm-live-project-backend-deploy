@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.deals',
     'apps.products.apps.ProductsConfig',
     "apps.companies.apps.CompaniesConfig",
+    'apps.tickets.apps.TicketsConfig',
 
 
 ]
