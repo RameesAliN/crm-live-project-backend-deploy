@@ -9,6 +9,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = (
     "email",
+    "id",
     "first_name",
     "last_name",
     "role",

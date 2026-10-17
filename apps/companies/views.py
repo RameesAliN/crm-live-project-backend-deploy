@@ -6,12 +6,12 @@ from .serializers import CompanySerializer
 
 
 class CompanyListCreateView(generics.ListCreateAPIView):
-    queryset = Company.objects.all().select_related("company_owner")
+    queryset = Company.objects.all().prefetch_related("company_owner")
     serializer_class = CompanySerializer
     permission_classes = [IsAuthenticated]
 
 
 class CompanyDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Company.objects.all().select_related("company_owner")
+    queryset = Company.objects.all().prefetch_related("company_owner")
     serializer_class = CompanySerializer
     permission_classes = [IsAuthenticated]

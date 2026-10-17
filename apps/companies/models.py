@@ -14,13 +14,10 @@ class Company(models.Model):
     domain = models.CharField(max_length=255, blank=True)
     company_name = models.CharField(max_length=150)
 
-    company_owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="owned_companies",
-    )
+    company_owner = models.ManyToManyField(
+    settings.AUTH_USER_MODEL,
+    blank=True,
+    related_name="owned_companies",)
 
     industry = models.CharField(max_length=150, blank=True)
     type = models.CharField(max_length=50,choices=TYPE_CHOICES,blank=True,)
