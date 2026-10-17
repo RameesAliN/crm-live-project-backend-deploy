@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "apps.companies.apps.CompaniesConfig",
     'apps.products.apps.ProductsConfig',
     "apps.activities.apps.ActivitiesConfig",
+    "apps.tickets.apps.TicketsConfig"
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
