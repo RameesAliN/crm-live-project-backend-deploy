@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'apps.products.apps.ProductsConfig',
     "apps.activities.apps.ActivitiesConfig",
     "apps.tickets.apps.TicketsConfig",
+    "apps.meetingactivity",
     "apps.emailactivity",
 ]
 REST_FRAMEWORK = {
