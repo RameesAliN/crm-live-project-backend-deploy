@@ -11,4 +11,5 @@ urlpatterns = [
     path ("tickets/",include("apps.tickets.urls")),
     path("meetings/", include("apps.meetingactivity.urls")),
     path("emails/", include("apps.emailactivity.urls")),
+    path("calls/",include("apps.callActivity.urls"))
 ]
