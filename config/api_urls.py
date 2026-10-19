@@ -10,4 +10,5 @@ urlpatterns = [
     path("notes/", include("apps.activities.urls")),
     path ("tickets/",include("apps.tickets.urls")),
     path("meetings/", include("apps.meetingactivity.urls")),
+    path("emails/", include("apps.emailactivity.urls")),
 ]
