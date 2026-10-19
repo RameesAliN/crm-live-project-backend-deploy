@@ -29,6 +29,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
+    assigned_to_name = serializers.SerializerMethodField()
     class Meta:
         model = Task
         fields = [
@@ -40,6 +41,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "priority",
             "note",
             "assigned_to",
+            "assigned_to_name",
             "lead",
             "company",
             "deal",
@@ -63,6 +65,11 @@ class TaskSerializer(serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError("Note cannot be empty.")
         return value
+
+    def get_assigned_to_name(self, obj):
+        if obj.assigned_to:
+            return f"{obj.assigned_to.first_name} {obj.assigned_to.last_name}".strip()
+        return None
 
     
     def validate(self, attrs):
