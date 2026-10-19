@@ -7,9 +7,11 @@ urlpatterns = [
     path("", include("apps.deals.urls")),
     path("companies/", include("apps.companies.urls")),
     path("products/",include("apps.products.urls")),
-    path("", include("apps.activities.urls")),
+
     path ("tickets/",include("apps.tickets.urls")),
     path("meetings/", include("apps.meetingactivity.urls")),
     path("emails/", include("apps.emailactivity.urls")),
-    path("calls/",include("apps.callActivity.urls"))
+    path("calls/",include("apps.callActivity.urls")),
+    path("notes/", include("apps.activities.notes.urls")),
+    path("tasks/", include("apps.activities.tasks.urls")),
 ]
