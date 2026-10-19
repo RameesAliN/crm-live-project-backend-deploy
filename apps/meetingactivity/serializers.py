@@ -5,12 +5,13 @@ from .models import Meeting
 class MeetingSerializer(serializers.ModelSerializer):
     duration_minutes = serializers.SerializerMethodField()
     created_by_name = serializers.SerializerMethodField()
-
+    attendee_names = serializers.SerializerMethodField()
+    
     class Meta:
         model = Meeting
         fields = [
             "id", "title", "start_time", "end_time", "duration_minutes",
-            "attendees", "location", "reminder", "note",
+            "attendees", "attendee_names", "location", "reminder", "note",
             "lead", "company", "deal", "ticket",
             "created_by","created_by_name", "created_at", "updated_at",
         ]
@@ -36,3 +37,9 @@ class MeetingSerializer(serializers.ModelSerializer):
             
             full_name = obj.created_by.get_full_name()
             return full_name or obj.created_by.email
+
+    def get_attendee_names(self, obj):
+        return [
+            attendee.get_full_name() or attendee.email
+            for attendee in obj.attendees.all()
+        ]
