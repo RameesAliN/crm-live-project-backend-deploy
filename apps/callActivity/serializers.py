@@ -18,13 +18,9 @@ class CallActivitySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "lead",
-            "lead_name",
             "company",
-            "company_name",
             "deal",
-            "deal_name",
             "ticket",
-            "ticket_name",
             "call_outcome",
             "duration",
             "date",
