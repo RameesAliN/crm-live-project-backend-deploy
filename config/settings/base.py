@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     "apps.tickets.apps.TicketsConfig",
     "apps.meetingactivity",
     "apps.emailactivity",
-    "apps.callActivity.apps.CallactivityConfig"
+    "apps.callActivity.apps.CallactivityConfig",
+    "apps.dashboard.apps.DashboardConfig",
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
