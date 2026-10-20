@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class EmailactivityConfig(AppConfig):
-    name = 'apps.emailactivity'
+    name = 'apps.activities.emailactivity'

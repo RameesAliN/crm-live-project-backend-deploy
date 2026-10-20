@@ -35,10 +35,10 @@ INSTALLED_APPS = [
     "apps.activities.notes.apps.NotesConfig",
     "apps.activities.tasks.apps.TasksConfig",
     "apps.tickets.apps.TicketsConfig",
-    "apps.meetingactivity",
-    "apps.emailactivity",
-    "apps.callActivity.apps.CallactivityConfig",
     "apps.dashboard.apps.DashboardConfig",
+    "apps.activities.meetingactivity",
+    "apps.activities.emailactivity",
+    "apps.activities.callActivity.apps.CallactivityConfig"
 ]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
