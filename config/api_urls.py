@@ -9,9 +9,9 @@ urlpatterns = [
     path("products/",include("apps.products.urls")),
 
     path ("tickets/",include("apps.tickets.urls")),
-    path("meetings/", include("apps.meetingactivity.urls")),
-    path("emails/", include("apps.emailactivity.urls")),
-    path("calls/",include("apps.callActivity.urls")),
+    path("meetings/", include("apps.activities.meetingactivity.urls")),
+    path("emails/", include("apps.activities.emailactivity.urls")),
+    path("calls/",include("apps.activities.callActivity.urls")),
     path("notes/", include("apps.activities.notes.urls")),
     path("tasks/", include("apps.activities.tasks.urls")),
 ]
