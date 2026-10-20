@@ -2,6 +2,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 from django.db.models.functions import ExtractMonth
+from django.db.models.functions import ExtractYear
 
 from apps.leads.models import Lead
 from apps.deals.models import Deal
@@ -29,6 +30,39 @@ def get_dashboard_summary():
         "closed_deals": closed_deals,
         "monthly_revenue": monthly_revenue,
     }
+def get_dashboard_stat_cards():
+    summary = get_dashboard_summary()
+
+    return [
+        {
+            "title": "Total Leads",
+            "value": f"{summary['total_leads']:,}",
+            "icon": "Users",
+            "iconBackground": "bg-gradient-to-b from-[#b9afff] to-white",
+            "iconColor": "text-[#5946e8]",
+        },
+        {
+            "title": "Active Deals",
+            "value": f"{summary['active_deals']:,}",
+            "icon": "BriefcaseBusiness",
+            "iconBackground": "bg-gradient-to-b from-[#9ce8da] to-white",
+            "iconColor": "text-[#20c7a7]",
+        },
+        {
+            "title": "Closed Deals",
+            "value": f"{summary['closed_deals']:,}",
+            "icon": "BriefcaseBusiness",
+            "iconBackground": "bg-gradient-to-b from-[#ffc1c5] to-white",
+            "iconColor": "text-[#ff7c85]",
+        },
+        {
+            "title": "Monthly Revenue",
+            "value": f"{summary['monthly_revenue']:,.0f}",
+            "icon": "Banknote",
+            "iconBackground": "bg-gradient-to-b from-[#f6d278] to-white",
+            "iconColor": "text-[#e4a500]",
+        },
+    ]
 
 
 
@@ -41,6 +75,28 @@ def get_dashboard_conversion():
         "closed_won": Deal.objects.filter(stage="closed_won").count(),
         "closed_lost": Deal.objects.filter(stage="closed_lost").count(),
     }
+def get_dashboard_conversion_data():
+    conversion = get_dashboard_conversion()
+
+    stages = [
+        ("Contact", "contact", "bg-[#5b49e5]"),
+        ("Qualified Lead", "qualified_lead", "bg-[#2ecdb8]"),
+        ("Proposal Sent", "proposal_sent", "bg-[#ffc400]"),
+        ("Negotiation", "negotiation", "bg-[#6670df]"),
+        ("Closed Won", "closed_won", "bg-[#10d46c]"),
+        ("Closed Lost", "closed_lost", "bg-[#ff4d4f]"),
+    ]
+    max_count = max(conversion.values(), default=0)
+
+    return [
+        {
+            "label": label,
+            "width": f"{round(count / max_count * 100)}%" if max_count else "0%",
+            "color": color,
+        }
+        for label, key, color in stages
+        for count in [conversion[key]]
+    ]
 
 
 
@@ -58,7 +114,10 @@ def get_monthly_sales_report():
         .order_by("month")
     )
 
-    revenue_by_month = { item["month"]: item["total_revenue"] for item in sales}
+    revenue_by_month = {
+        item["month"]: item["total_revenue"]
+        for item in sales
+    }
 
     months = [
         "Jan", "Feb", "Mar", "Apr",
@@ -69,9 +128,31 @@ def get_monthly_sales_report():
     return [
         {
             "month": month_name,
-            "revenue": revenue_by_month.get(month_number, 0),
+            "solid": float(
+                revenue_by_month.get(month_number, 0)
+            ),
         }
-        for month_number, month_name in enumerate(months, start=1)
+        for month_number, month_name in enumerate(
+            months, start=1
+        )
+    ]
+def get_yearly_sales_report():
+    sales = (
+        Deal.objects.filter(
+            stage="closed_won"
+        )
+        .annotate(year=ExtractYear("close_date"))
+        .values("year")
+        .annotate(total_revenue=Sum("amount"))
+        .order_by("year")
+    )
+
+    return [
+        {
+            "year": item["year"],
+            "solid": float(item["total_revenue"] or 0),
+        }
+        for item in sales
     ]
 
 
@@ -136,3 +217,25 @@ def get_team_performance():
         })
 
     return performance
+def get_team_performance_data():
+    performance = get_team_performance()
+
+    return [
+        {
+            "employee": item["employee_name"],
+            "activeDeals": item["active_deals"],
+            "closedDeals": item["closed_deals"],
+            "revenue": f"${item['revenue']:,.0f}",
+            "change": (
+                f"{item['revenue_growth_percentage']:+.1f}%"
+                if item["revenue_growth_percentage"] is not None
+                else "N/A"
+            ),
+            "positive": (
+                item["revenue_growth_percentage"] >= 0
+                if item["revenue_growth_percentage"] is not None
+                else False
+            ),
+        }
+        for item in performance
+    ]
