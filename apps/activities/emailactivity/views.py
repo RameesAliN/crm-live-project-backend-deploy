@@ -1,8 +1,15 @@
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.utils import timezone
 
-from .models import Email
-from .serializers import EmailSerializer
+from .models import Email,EmailAttachment
+from .serializers import EmailSerializer,EmailAttachmentSerializer
 
 
 class EmailAccessMixin:
@@ -33,6 +40,76 @@ class EmailListCreateView(EmailAccessMixin, generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
+class  EmailAttachmentListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmailAttachmentSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        return EmailAttachment.objects.filter(email_id=self.kwargs["email_id"])
+
+    def perform_create(self, serializer):
+        serializer.save(email_id=self.kwargs["email_id"])
 
 class EmailDetailView(EmailAccessMixin, generics.RetrieveUpdateDestroyAPIView):
     pass
+
+class EmailSendView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request,pk):
+        try:
+            email = Email.objects.get(pk=pk)
+        except Email.DoesNotExist:
+            return Response(
+                {"detail" : "Email not found"},
+                status = status.HTTP_404_NOT_FOUND
+            )
+
+        if email.sent_at:
+            return Response(
+                {"detail": "This email has already been sent."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not settings.EMAIL_HOST_USER or not settings.EMAIL_HOST_PASSWORD:
+            return Response(
+                {"detail": "SMTP credentials are not configured."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        try:
+            message = EmailMessage(
+                subject=email.subject,
+                body=email.body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email.recipient_email],
+                cc=email.cc or [],
+                bcc=email.bcc or [],
+            )
+
+            for attachment in email.emailattachments.all():
+                attachment.file.open("rb")
+                try:
+                    message.attach(
+                        attachment.file.name.split("/")[-1],
+                        attachment.file.read(),
+                    )
+                finally:
+                    attachment.file.close()
+
+            message.send(fail_silently=False)
+
+            email.sent_at = timezone.now()
+            email.save(update_fields=["sent_at"])
+
+            return Response(
+                EmailSerializer(email).data,
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception:
+            return Response(
+                {"detail": "Email sending failed. Check SMTP configuration and server logs."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
