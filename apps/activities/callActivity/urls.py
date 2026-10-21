@@ -3,6 +3,7 @@ from .views import (
     CallActivityListCreateView,
     CallActivityDetailView,
     TestTwilioCallView,
+    twiml_voice_view,
 )
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
             TestTwilioCallView.as_view(),
             name="test-twilio-call",
         ),
+    
 ]

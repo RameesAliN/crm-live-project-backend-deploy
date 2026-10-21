@@ -1,12 +1,32 @@
 
+from django.http import HttpResponse
 from rest_framework.serializers import Serializer, CharField
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from .models import CallActivity
+from twilio.twiml.voice_response import VoiceResponse  # type: ignore
 from drf_spectacular.utils import extend_schema # type: ignore
 from .serializers import CallActivitySerializer 
 from .services import initiate_call
+
+
+def twiml_voice_view(request): 
+    response = VoiceResponse() 
+    response.say( "Hello! This is a call from your CRM system." \
+    " " "Thank you for your time. Goodbye.", voice="alice", language="en-US",
+      ) 
+    response.hangup() 
+    return HttpResponse( str(response), content_type="text/xml", )
+
+
+
+
+
+
+
 
 class TestTwilioCallSerializer(Serializer): 
     to_number = CharField( required=True, help_text="Destination phone number in international format, e.g. +971501234567", )
