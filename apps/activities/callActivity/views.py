@@ -1,9 +1,41 @@
 
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.serializers import Serializer, CharField
+from rest_framework import generics, status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from .models import CallActivity
-from .serializers import CallActivitySerializer
+from drf_spectacular.utils import extend_schema # type: ignore
+from .serializers import CallActivitySerializer 
+from .services import initiate_call
+
+class TestTwilioCallSerializer(Serializer): 
+    to_number = CharField( required=True, help_text="Destination phone number in international format, e.g. +971501234567", )
+
+
+
+class TestTwilioCallView(APIView): 
+    @extend_schema(
+             request=TestTwilioCallSerializer, 
+             responses={201: dict}, 
+             description="Initiate a one-sided outbound call using Twilio.", )
+
+
+    def post(self, request): 
+        to_number = request.data.get("to_number") 
+        if not to_number: 
+            return Response( 
+                {"error": "to_number is required."},
+                 status=status.HTTP_400_BAD_REQUEST,
+                   ) 
+        try: 
+            call = initiate_call(to_number) 
+            return Response( { "message": "Call initiated successfully.", **call, },
+                             status=status.HTTP_201_CREATED,
+                           ) 
+        except Exception as exc:
+            return Response( {"error": str(exc)}, 
+                 status=status.HTTP_400_BAD_REQUEST, 
+            )
 
 
 class CallActivityListCreateView(generics.ListCreateAPIView):
