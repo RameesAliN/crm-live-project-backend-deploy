@@ -51,6 +51,17 @@ class  EmailAttachmentListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(email_id=self.kwargs["email_id"])
 
+
+class EmailAttachmentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmailAttachmentSerializer
+    parser_classes = [MultiPartParser, FormParser]
+
+    def get_queryset(self):
+        return EmailAttachment.objects.filter(
+            email_id=self.kwargs["email_id"]
+        )
+
 class EmailDetailView(EmailAccessMixin, generics.RetrieveUpdateDestroyAPIView):
     pass
 
