@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "apps.activities.notes.apps.NotesConfig",
     "apps.activities.tasks.apps.TasksConfig",
     "apps.tickets.apps.TicketsConfig",
+    "apps.dashboard.apps.DashboardConfig",
     "apps.activities.meetingactivity",
     "apps.activities.emailactivity",
     "apps.activities.callActivity.apps.CallactivityConfig"
