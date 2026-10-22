@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class AttachmentsConfig(AppConfig):
-    name = 'app.attachments'
+    name = 'apps.attachments'

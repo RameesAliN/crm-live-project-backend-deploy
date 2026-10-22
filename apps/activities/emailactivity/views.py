@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.utils import timezone
@@ -35,6 +36,9 @@ class EmailAccessMixin:
 
 
 class EmailListCreateView(EmailAccessMixin, generics.ListCreateAPIView):
+    
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
@@ -76,7 +80,7 @@ class EmailSendView(APIView):
                 bcc=email.bcc or [],
             )
 
-            for attachment in email.emailattachments.all():
+            for attachment in email.attachments.all():
                 attachment.file.open("rb")
                 try:
                     message.attach(

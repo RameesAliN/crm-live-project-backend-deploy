@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "apps.dashboard.apps.DashboardConfig",
     "apps.activities.meetingactivity",
     "apps.activities.emailactivity",
-    "apps.activities.callActivity.apps.CallactivityConfig"
+    "apps.activities.callActivity.apps.CallactivityConfig",
     "apps.attachments",
 ]
 
