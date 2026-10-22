@@ -15,5 +15,5 @@ urlpatterns = [
     path("notes/", include("apps.activities.notes.urls")),
     path("tasks/", include("apps.activities.tasks.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
-    path("")
+    
 ]
