@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     CallActivityListCreateView,
     CallActivityDetailView,
-    TestTwilioCallView,
+    MakeCallView,
+    MakeBridgeCallView,
     twiml_voice_view,
 )
 
@@ -11,8 +12,8 @@ urlpatterns = [
     path("<int:pk>/", CallActivityDetailView.as_view(), name="call-activity-detail"),
     path(
             "test-call/",
-            TestTwilioCallView.as_view(),
+            MakeCallView.as_view(),
             name="test-twilio-call",
         ),
-    
+    path("bridge-call/", MakeBridgeCallView.as_view(), name="test-bride-call"),
 ]
