@@ -55,3 +55,18 @@ class Email(models.Model):
 
     def __str__(self):
         return self.subject
+
+def email_attachment_path(instance, filename):
+    return f"email_attachments/{instance.email_id}/{filename}"
+
+class EmailAttachment(models.Model):
+    email = models.ForeignKey(
+        Email,
+        on_delete=models.CASCADE,
+        related_name="emailattachments"
+        )
+    file = models.FileField(upload_to=email_attachment_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+            return self.file.name

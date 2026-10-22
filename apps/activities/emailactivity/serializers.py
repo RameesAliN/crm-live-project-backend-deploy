@@ -1,9 +1,15 @@
 from rest_framework import serializers
-from .models import Email
+from .models import Email,EmailAttachment
 
+class EmailAttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmailAttachment
+        fields = ["id", "email", "file", "uploaded_at"]
+        read_only_fields = ["id", "email", "uploaded_at"]
 
 class EmailSerializer(serializers.ModelSerializer):
 
+    emailattachments = EmailAttachmentSerializer(many=True, read_only=True)
     created_by_name = serializers.SerializerMethodField()
     
     cc = serializers.ListField(
@@ -32,6 +38,8 @@ class EmailSerializer(serializers.ModelSerializer):
             "company",
             "deal",
             "ticket",
+            "emailattachments",
+            "sent_at",
             "created_by",
             "created_by_name",
             "created_at",
@@ -39,6 +47,7 @@ class EmailSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
+            "sent_at",
             "created_by",
             "created_by_name",
             "created_at",
@@ -56,3 +65,4 @@ class EmailSerializer(serializers.ModelSerializer):
         
         full_name = obj.created_by.get_full_name()
         return full_name or obj.created_by.email
+
