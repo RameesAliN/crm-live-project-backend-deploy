@@ -1,15 +1,14 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.utils import timezone
 
-from .models import Email,EmailAttachment
-from .serializers import EmailSerializer,EmailAttachmentSerializer
+from .models import Email
+from .serializers import EmailSerializer
 
 
 class EmailAccessMixin:
@@ -37,30 +36,12 @@ class EmailAccessMixin:
 
 
 class EmailListCreateView(EmailAccessMixin, generics.ListCreateAPIView):
+    
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
 
-class  EmailAttachmentListCreateView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = EmailAttachmentSerializer
-    parser_classes = [MultiPartParser, FormParser]
-
-    def get_queryset(self):
-        return EmailAttachment.objects.filter(email_id=self.kwargs["email_id"])
-
-    def perform_create(self, serializer):
-        serializer.save(email_id=self.kwargs["email_id"])
-
-
-class EmailAttachmentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = EmailAttachmentSerializer
-    parser_classes = [MultiPartParser, FormParser]
-
-    def get_queryset(self):
-        return EmailAttachment.objects.filter(
-            email_id=self.kwargs["email_id"]
-        )
 
 class EmailDetailView(EmailAccessMixin, generics.RetrieveUpdateDestroyAPIView):
     pass
@@ -70,7 +51,7 @@ class EmailSendView(APIView):
 
     def post(self,request,pk):
         try:
-            email = Email.objects.get(pk=pk)
+            email = Email.objects.prefetch_related("attachments").get(pk=pk)
         except Email.DoesNotExist:
             return Response(
                 {"detail" : "Email not found"},
@@ -99,11 +80,11 @@ class EmailSendView(APIView):
                 bcc=email.bcc or [],
             )
 
-            for attachment in email.emailattachments.all():
+            for attachment in email.attachments.all():
                 attachment.file.open("rb")
                 try:
                     message.attach(
-                        attachment.file.name.split("/")[-1],
+                        attachment.original_name or attachment.file.name.split("/")[-1],
                         attachment.file.read(),
                     )
                 finally:

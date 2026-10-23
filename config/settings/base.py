@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     "apps.dashboard.apps.DashboardConfig",
     "apps.activities.meetingactivity",
     "apps.activities.emailactivity",
-    "apps.activities.callActivity.apps.CallactivityConfig"
+    "apps.activities.callActivity.apps.CallactivityConfig",
+    "apps.attachments",
 ]
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
