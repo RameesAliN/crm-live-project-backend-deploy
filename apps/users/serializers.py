@@ -69,5 +69,29 @@ class UserSerializer(serializers.ModelSerializer):
         model = User 
         fields = [ "id", "first_name", "last_name", "email", "phone", "company_name", "industry_type", "requested_role", "country", "leads","companies", "deals", ] 
         read_only_fields = ["id", "leads","companies", "deals",]
-    
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    uid = serializers.CharField(required=True)
+    token = serializers.CharField(required=True)
+
+    new_password = serializers.CharField(
+        write_only=True,
+        validators=[validate_password],
+        style={"input_type": "password"},
+    )
+
+    confirm_password = serializers.CharField(write_only=True,style={"input_type": "password"},)
+
+    def validate(self, attrs):
+        if attrs["new_password"] != attrs["confirm_password"]:
+            raise serializers.ValidationError({
+                "confirm_password": "Passwords do not match."
+            })
+
+        return attrs
    
