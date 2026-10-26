@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv # type: ignore
+import dj_database_url
 
 
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -117,6 +118,11 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", "5432"),
     }
 }
+if os.getenv("DATABASE_URL"):
+    DATABASES["default"] = dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 
 
 # Password validation
