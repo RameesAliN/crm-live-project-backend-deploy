@@ -44,6 +44,9 @@ class Task(models.Model):
     deal = models.ForeignKey("deals.Deal",on_delete=models.CASCADE,
         null=True,blank=True,related_name="tasks",)
 
+    ticket = models.ForeignKey("tickets.Ticket",on_delete=models.CASCADE,
+        null=True,blank=True,related_name="tasks",)
+
     status = models.CharField(max_length=20,choices=STATUS_CHOICES,default="pending",)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

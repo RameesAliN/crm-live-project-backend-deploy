@@ -11,6 +11,7 @@ class NoteSerializer(serializers.ModelSerializer):
             "lead",
             "company",
             "deal",
+            "ticket",
             "created_by",
             "created_at",
             "updated_at",
