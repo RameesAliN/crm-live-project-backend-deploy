@@ -29,6 +29,13 @@ class Note(models.Model):
         related_name="notes",
     )
 
+    ticket = models.ForeignKey(
+    "tickets.Ticket",
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True,
+    related_name="notes",)
+
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
