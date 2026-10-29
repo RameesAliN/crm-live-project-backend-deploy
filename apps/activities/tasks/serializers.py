@@ -18,6 +18,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "lead",
             "company",
             "deal",
+            "ticket",
             "status",
             "created_at",
             "updated_at",
@@ -51,9 +52,10 @@ class TaskSerializer(serializers.ModelSerializer):
         lead = attrs.get("lead",instance.lead if instance else None,)
         company = attrs.get("company", instance.company if instance else None,)
         deal = attrs.get("deal",instance.deal if instance else None,)
+        ticket = attrs.get("ticket", instance.ticket if instance else None)
 
-        selected = [lead, company, deal]
+        selected = [lead, company, deal, ticket]
 
         if sum(value is not None for value in selected) != 1:
-            raise serializers.ValidationError("A task must belong to exactly one: Lead, Company, or Deal.")
+            raise serializers.ValidationError("A task must belong to exactly one: Lead, Company, Deal, or Ticket.")
         return attrs
